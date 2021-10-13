@@ -186,3 +186,5 @@ puts "He said, \"Don't speak.\""
 'abc' < 'ab'   # => false
 'abc' < 'abcd' # => true
 'あいうえお' < 'かきくけこ' # => true
+
+# 数値
