@@ -193,3 +193,34 @@ a = [1, 2, 3]
 [1, 2, 3] == [1, 2, 4]    # => false
 [1, 2, 3] == [1, 2]       # => false
 [1, 2, 3] == [1, 2, 3, 4] # => false
+
+
+# %記法で文字列の配列を簡潔に作る
+# 配列は[]を使って作成することが、多い文字列については%記法の%wまたは%Wを使って作成する方法が用意されている。%記法を使うと、カンマではなく空白文字(スペースや改行)が要素の区切り文字となる
+# また、文字列をシングルクオートやダブルクオートで囲む必要もないため、結果として[]を使う場合よりもコードが短くなる。
+
+# []で文字列の配列を作成する
+['apple', 'melon', 'orange'] # => ["apple", "melon", "orange"]
+
+# %wで文字列の配列を作成する(!で囲む場合)
+%w!apple melon orange!       # => ["apple", "melon", "orange"]
+
+# %wで文字列の配列を作成する(丸カッコで囲む場合)
+%w(apple melon orange)       # => ["apple", "melon", "orange"]
+
+# 空白文字(スペースや改行)が連続した場合も1つの区切り文字と見なされる
+%w(
+  apple
+  melon
+  orange
+)
+# => ["apple", "melon", "orange"]
+
+# 値にスペースを含めたい場合はバックスラッシュでエスケープする。
+%w(big\ apple small\ melon orange) # =>["big apple", "small melon", "orange"]
+
+# 式展開や改行文字(\n), タブ文字(\t)などを含めたい場合、%W(大文字のW)を使う
+prefix = 'This is'
+%W(#{prefix}\ an\ apple small\nmelon orange)
+# => ["This is an apple", "small\nmelon", "orange"]
+
