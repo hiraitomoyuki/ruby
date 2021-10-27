@@ -224,3 +224,10 @@ prefix = 'This is'
 %W(#{prefix}\ an\ apple small\nmelon orange)
 # => ["This is an apple", "small\nmelon", "orange"]
 
+
+# 文字列を分解して配列に変換することもできる。いくつか方法はあるが、ここではcharsメソッドとsplitメソッドを使う
+# charsメソッドは文字列中の1文字1文字を配列の要素に分解するメソッドです。
+'Ruby'.chars # => ["R", "u", "b", "y"]
+# splitメソッドは引数で渡した区切り文字で文字列を配列に分割メソッドです。
+'Ruby,Java,Perl,PHP'.split(',') # => ["Ruby", "Java", "Perl", "PHP"]
+# このほかにも正規表現と組み合わせて文字列を配列に変換することができる
