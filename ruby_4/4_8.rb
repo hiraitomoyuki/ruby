@@ -26,3 +26,19 @@ fruits.each      # => <Enumerator: ["apple", "orange", "melon"]:each>
 fruits.map       # => <Enumerator: ["apple", "orange", "melon"]:map>
 fruits.delete_if # => <Enumerator: ["apple", "orange", "melon"]:delete_if>
 # このようになっているため、with_indexメソッドはあたかもさまざまな繰り返し処理用のメソッドと組み合わせて実行できるように見える
+
+
+# each_with_indexメソッドやwith_indexメソッドを使うと、繰り返し処理中に添え字が取得できて便利だが、添え字はいつも0から始まる
+# これを0以外の数値(例えば1や10)から始めたいと思った場合、with_indexに引数を渡す。そうすると、添え字が引数で渡した数値から開始する
+fruits = ['apple', 'orange', 'melon']
+
+# eachで繰り返しつつ、1から始まる添え字を取得する
+fruits.each.with_index(1) { |fruit, i| puts "#{i}: #{fruit}" }
+# => 1: apple
+#    2: orange
+#    3: melon
+# mapで処理しつつ、10から始まる添え字を取得する
+fruits.map.with_index(10) { |fruit, i| "#{i}: #{fruit}" }
+# => ["10: apple", "11: orange", "12: melon"]
+
+# ちなみに、each_with_indexメソッドには引数を渡せないため、each_with_index(1)ではなく、上のコードのようにeach.with_index(1)の形で呼び出す必要がある
