@@ -42,3 +42,38 @@ fruits.map.with_index(10) { |fruit, i| "#{i}: #{fruit}" }
 # => ["10: apple", "11: orange", "12: melon"]
 
 # ちなみに、each_with_indexメソッドには引数を渡せないため、each_with_index(1)ではなく、上のコードのようにeach.with_index(1)の形で呼び出す必要がある
+
+
+# 配列がブロック引数に渡される場合
+dimensions = [
+  # [縦, 横]
+  [10, 20],
+  [30, 40],
+  [50, 60],
+]
+# 面積の計算結果を格納する配列
+areas = []
+# ブロック引数が1個であれば、ブロック引数の値が配列になる
+dimensions.each do |dimension|
+  length = dimensions[0]
+  width = dimension[1]
+  areas << length * width
+end
+areas # => [200, 1200, 3000]
+
+# ブロック引数の数を2個にすると、盾と横の値を別々に受け取ることができ、上記のコードよりシンプルになる
+dimensions = [
+  # [縦, 横]
+  [10, 20],
+  [30, 40],
+  [50, 60],
+]
+# 面積の計算結果を格納する配列
+areas = []
+# 配列の要素分だけブロック引数を用意すると、各要素の値が別々の変数に格納される
+dimensions.each do |length, width|
+  areas << length * width
+end
+areas # => [200, 1200, 3000]
+
+# あまり意味はないが、ブロック引数が多すぎる場合は、はみ出しているブロック引数はnilになる
