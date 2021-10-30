@@ -77,3 +77,68 @@ end
 areas # => [200, 1200, 3000]
 
 # あまり意味はないが、ブロック引数が多すぎる場合は、はみ出しているブロック引数はnilになる
+# lengthとwidthには値が渡されるが、fooとbarはnilになる
+dimensions.each do |length, width, foo, bar|
+  p [length, width, foo, bar]
+end
+# => [10, 20, nil, nil]
+#    [30, 40, nil, nil]
+#    [50, 60, nil, nil]
+# 配列の要素が3個あるのに、ブロック引数が2個しかない場合は3つめの値が捨てられるが、わかりづらいので特別な理由がない限りは書かないように
+dimensions = [
+  [10, 20, 100],
+  [30, 40, 200],
+  [50, 60, 300],
+]
+# 3つの値をブロック引数に渡そうとするが、2つしかないので3つめの値は捨てられる
+dimensions.each do |length, width|
+  p [length, width]
+end
+# => [10, 20]
+#    [30, 40]
+#    [50, 60]
+
+
+# each_with_indexのように、もとからブロック引数を2つ受け取る場合は、
+
+dimensions = [
+  [10, 20],
+  [30, 40],
+  [50, 60],
+]
+dimensions.each_with_index do |length, width, i|
+  puts "length: #{length}, width: #{width}, i: #{i}"
+end
+# => length: [10, 20], width: 0, i:
+#    length: [30, 40], width: 1, i:
+#    length: [50, 60], width: 2, i:
+
+# ではなく
+dimensions = [
+  [10, 20],
+  [30, 40],
+  [50, 60],
+]
+# いったん配列のまま受け取る
+dimensions.each_with_index do |dimension, i|
+  # 配列から縦と横の値を取り出す
+  length = dimension[0]
+  width = dimensions[1]
+  puts "length: #{length}, width: #{width}, i: #{i}"
+end
+# => length: 10, width: 20, i: 0
+#    length: 30, width: 40, i: 1
+#    length: 50, width: 60, i: 2
+# 一度配列で受け取ってから変数に入れ直すのは面倒だから、配列の要素を受け取るブロック引数を()で囲むと配列の要素を別々の引数として受け取れる
+dimensions = [
+  [10, 20],
+  [30, 40],
+  [50, 60],
+]
+# ブロック引数を()で囲んで、配列の要素を別々の引数として受け取る
+dimensions.each_with_index do |(length, width), i|
+  puts "length: #{length}, width: #{width}, i: #{i}"
+end
+# => length: 10, width: 20, i: 0
+#    length: 30, width: 40, i: 1
+#    length: 50, width: 60, i: 2
