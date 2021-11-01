@@ -83,3 +83,51 @@ until a.size <= 3
 end
 a # => [10, 20, 30]
 # while文もuntil文も、条件式を間違えたり、いつまでたっても上限式の結果が変わらないようなコードを書いたりすると無限ループしてしまう
+
+
+# for文
+# 配列やハッシュはfor文で繰り返し処理することもできる
+for 変数 in 配列やハッシュ
+  繰り返し処理
+end
+
+# 上記では「配列やハッシュ」と書いたが、厳密にはeachメソッドを定義しているオブジェクトであればなんでも良い
+numbers = [1, 2, 3, 4]
+sum = 0
+for n in numbers
+  sum += n
+end
+sum # => 10
+
+# doを入れて1行で書くことも可能
+sum = 0
+for n in numbers do sum += n end
+sum # => 10
+
+# とはいえ、上のfor文は実質的にeachメソッドを使った次のコードとほぼ同じ。Rubyのプログラムでは通常、for文よりもeachメソッドを使う
+numbers = [1, 2, 3, 4]
+sum = 0
+numbers.each do |n|
+  sum += n
+end
+sum # => 10
+
+# 厳密に言うと全く同じではなく、for文の場合は配列の要素を受け取る変数や、for文の中で作成したローカル変数がfor文の外でも使える、という違いがある。
+numbers = [1, 2, 3, 4]
+sum = 0
+numbers.each do |n|
+  sum_value = n.even? ? n * 10 : n
+  sum += sum_value
+end
+# ブロック引数やブロック内で作成した変数はブロックの外では参照できない
+n         # => NameError: undefined local variable or method 'n' for main:Object
+sum_value # => NameError: undefined local variable or method 'sum_value' for main:Object
+
+sum = 0
+for n in numbers
+  sum_value = n.even? ? n * 10 : n
+  sum += sum_value
+end
+# for文の中で作成された変数はfor文の外でも参照できる
+n         # => 4
+sum_value # => 40
