@@ -133,3 +133,30 @@ n         # => 4
 sum_value # => 40
 
 # loopメソッド
+# あえて無限ループを作りたい場合はwhile文を使う
+while true
+  # 無限ループ用の処理
+end
+
+# これと、Kernelモジュールのloopメソッドとブロックを使う方法がある。
+loop do
+  # 無限ループ用の処理
+end
+# 無限ループから脱出する場合はbreakを使う。
+# 配列に格納した5つの数値の中からランダムに数値を選び、5が出たタイミングで脱出する無限ループ
+numbers = [1, 2, 3, 4, 5]
+loop do
+  # sampleメソッドでランダムに要素を1つ取得する
+  n = numbers.sample
+  puts n
+  break if n == 5
+end
+
+# while文でもok
+while true
+  n = numbers.sample
+  puts n
+  break if n == 5
+end
+# loopメソッドはブロックを使うので変数nがループの外で参照できない。一方で、while文はループの外でもnが参照できる
+# この違いはfor文とeachメソッドの違いと同じ
