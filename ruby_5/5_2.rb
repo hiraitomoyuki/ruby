@@ -70,3 +70,24 @@ currencies['india'] # => 'rupee'
 # 存在しないキーを指定するとnilが返る
 currencies = {'japan' => 'yen', 'us' => 'dollar', 'india' => 'rupee' }
 currencies['brazil'] # => nil
+
+# ハッシュを使った繰り返し処理
+# eachメソッドを使うと、キーと値の組み合わせを順に取り出すことができる。キーと値は格納した順に取り出される。ブロック引数がキーと値で2個になっている点に注意
+currencies = {'japan' => 'yen', 'us' => 'dollar', 'india' => 'rupee' }
+currencies.each do |key, value|
+  puts "#{key} : #{value}"
+end
+# => japan : yen
+#    us : dollar
+#    india : rupee
+
+# ブロック引数を1つにするとキーと値が配列に格納される
+currencies = {'japan' => 'yen', 'us' => 'dollar', 'india' => 'rupee' }
+currencies.each do |key_value|
+  key = key_value[0]
+  value = key_value[1]
+  puts "#{key} : #{value}"
+end
+# => japan : yen
+#    us : dollar
+#    india : rupee
