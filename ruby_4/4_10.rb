@@ -155,3 +155,46 @@ end
 #    LocalJumpError: unexpected return
 # このように、breakとreturnは「脱出する」という目的は同じでも、「繰り返し処理からの脱出」と「メソッドからの脱出」という大きな違いがあるため、用途に応じて適切に使い分ける必要がある。
 
+# next
+# 繰り返し処理を途中で中断し、次の繰り返し処理を進める場合はnextを使う。
+# 偶数であれば処理を中断して次の繰り返し処理に進むコード
+numbers = [1, 2, 3, 4, 5]
+numbers.each do |n|
+  # 偶数であれば中断して次の繰り返し処理に進む
+  next if n.even?
+  puts n
+end
+# => 1
+#    3
+#    5
+
+# eachメソッドの中だけでなく、while文やuntil文、for文の中でも使える点や、入れ子になった繰り返し処理では一番内側のループだけが中断の対象になる点はbreakと同じ
+numbers = [1, 2, 3, 4, 5]
+i = 0
+while i < numbers.size
+  n = numbers[i]
+  i += 1
+  # while文の中でnextを使う
+  next if n.even?
+  puts n
+end
+# => 1
+#    3
+#    5
+
+fruits = ['apple', 'melon', 'orange']
+numbers = [1, 2, 3, 4]
+fruits.each do |fruit|
+  numbers.each do |n|
+    # 繰り返し処理が入れ子になっている場合は、一番内側のループだけが中断される
+    next if n.even?
+    puts "#{fruit}, #{n}"
+  end
+end
+# => apple, 1
+#    allpe, 3
+#    melon, 1
+#    melon, 3
+#    orange, 1
+#    orange, 3
+
