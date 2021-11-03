@@ -47,3 +47,61 @@ fruits.each do |fruit|
     break if n == 3
   end
 end
+
+# throwとcatchを使った大域脱出
+# 一気に外側のループまで脱出したい場合は、Kernelモジュールのthrowメソッドとcatchメソッドを使う
+catch タグ do
+  # 繰り返し処理など
+  throw タグ
+end
+# throw,catchというキーワードは、他の言語では例外処理に使われる場合があるが、Rubyのthrow,catchは例外処理とは関係ない
+# throwメソッドとcatchを使って"orange"と3の組み合わせが出たらすべての繰り返し処理を脱出するコード
+fruits = ['apple', 'melon', 'orange']
+numbers = [1, 2, 3]
+catch :done do
+  fruits.shuffle.each do |fruit|
+    numbers.shuffle.each do |n|
+      puts "#{fruit}, #{n}"
+      if fruit == 'orange' && n == 3
+        # すべての繰り返し処理を脱出する
+        throw :done
+      end
+    end
+  end
+end
+# => melon, 2
+#    melon, 1
+#    melon, 3
+#    orange, 1
+#    orange, 3
+
+# throwとcatchのタグが一致しない場合はエラーが発生する
+fruits = ['apple', 'melon', 'orange']
+numbers = [1, 2, 3]
+catch :done do
+  fruits.shuffle.each do |fruit|
+    numbers.shuffle.each do |n|
+      puts "#{fruit}, #{n}"
+      if fruit == 'orange' && n == 3
+        # catchと一致しないタグをthrowする
+        throw :foo
+      end
+    end
+  end
+end
+# => orange, 1
+#    orange, 3
+#    UncaughtThrowError: uncaught throw :foo
+
+# throwメソッドに第2引数を渡すとcatchメソッドの戻り値になる
+ret =
+  catch :done do
+    throw :done
+  end
+ret # => nil
+
+ret =
+  catch :done do
+    throw :done, 123
+  end
+ret # => 123
