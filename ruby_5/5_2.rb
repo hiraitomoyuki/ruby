@@ -91,3 +91,32 @@ end
 # => japan : yen
 #    us : dollar
 #    india : rupee
+
+# ハッシュの同値比較、要素数の取得、要素の削除
+# ==でハッシュ同士を比較すると、同じハッシュかどうかチェックできる。　このときすべてのキーと値が同じであればtrueが返る。
+a = { 'x' => 1, 'y' => 2, 'z' => 3 }
+
+# すべてのキーと値が同じであればtrue
+b = { 'x' => 1, 'y' => 2, 'z' => 3 }
+a == b # => true
+
+# 並び順が異なっていてもキーと値が全て同じならtrue
+c = { 'z' => 3, 'y' => 2, 'x' => 1}
+a == c # => true
+
+# キー'x'の値が異なるのでfalse
+d = { 'x' => 10, 'y' => 2, 'z' => 3 }
+a == d # => false
+
+# sizeメソッド(エイリアスメソッドはlength)を使うとハッシュの要素の個数を調べることができる
+{}.size # => 0
+{ 'x' => 1, 'y' => 2, 'z' => 3 }.size # => 3
+
+# deleteメソッドを使うと指定したキーに対応する要素を削除できる。戻り値は削除された要素の値
+currencies = {'japan' => 'yen', 'us' => 'dollar', 'india' => 'rupee' }
+
+# 削除しようとしたキーが見つからないときはnilが返る
+currencies.delete('italy') # => nil
+
+# ブロックを渡すとキーが見つからない時の戻り値を作成できる
+currencies.delete('italy') { |key| "Not found: #{key}" } # => "Not found: italy"
