@@ -105,3 +105,53 @@ ret =
     throw :done, 123
   end
 ret # => 123
+
+# 繰り返し処理で使うbreakとreturnの違い
+# これは積極的に使うべきテクニックではなく、挙動が複雑になるので極力使わないようにした方がよい内容
+def greeting(country)
+  # countryがnilならメッセージを返してメソッドを抜ける
+  return 'countryを入力してください' if country.nil?
+
+  if country == 'japan'
+    'こんにちは'
+  else
+    'hello'
+  end
+end
+
+# 繰り返し処理の中でもreturnは使えるが、breakとreturnは同じではない。breakを使うと「繰り返し処理からの脱出」になるが、returnを使うと「(繰り返し処理のみならず)メソッドからの脱出」になる
+# 「配列の中からランダムに1つの偶数を選び、その数を10倍して返すメソッド」のコード
+def calc_with_break
+  numbers = [1, 2, 3, 4, 5, 6]
+  target = nil
+  numbers.shuffle.each do |n|
+    target = n
+    # berakで脱出する
+    break if n.even?
+  end
+  target * 10
+end
+calc_with_break # => 40
+
+# breakの代わりにreturnを使うと次のようになる
+def calc_with_return
+  numbers = [1, 2, 3, 4, 5, 6]
+  target = nil
+  numbers.shuffle.each do |n|
+    target = n
+    # returnで脱出する？
+    return if n.even?
+  end
+  target * 10
+end
+calc_with_return # => nil
+# calc_with_returnの戻り値がなぜnilになったかと言うと、returnが呼ばれた瞬間にメソッド全体を脱出してしまったから。returnには引数を渡していないので、結果としてメソッドの戻り値はnilになる。
+# また、returnの役割はあくまで「メソッドからの脱出」なので、returnを呼び出した場所がメソッドの内部でなければエラーになる。
+[1, 2, 3].each do |n|
+  puts n
+  return
+end
+# => 1
+#    LocalJumpError: unexpected return
+# このように、breakとreturnは「脱出する」という目的は同じでも、「繰り返し処理からの脱出」と「メソッドからの脱出」という大きな違いがあるため、用途に応じて適切に使い分ける必要がある。
+
