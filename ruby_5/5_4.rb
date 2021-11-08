@@ -48,3 +48,66 @@ person = {
 person[:age]             # => 20
 person[:friends]         # => ["Bob", "Carol"]
 person[:phones][:mobile] # => "5678-0000"
+
+# メソッドのキーワード引数とハッシュ
+# メソッドに引数を渡す場合、どの引数がどんな意味を持つかわかりづらい時がある
+def buy_burger(menu, drink, potato)
+  # ハンバーガーを購入
+  if drink
+    # ドリンクを購入
+  end
+  if potato
+    # ポテトを購入
+  end
+end
+
+# チーズバーガーとドリンクとポテトを購入する
+buy_burger('cheese', true, true)
+
+# フィッシュバーガーとドリンクを購入する
+buy_burger('fish', true, false)
+
+# ここではちゃんと引数を確認したあとなので、特に違和感はないかもしれないが、特に説明もなく次のようなコードを見せられたら
+buy_burger('cheese', true, true)
+buy_burger('fish', true, false)
+
+# メソッドのキーワード引数は次のように定義する
+def メソッド名(キーワード引数1: デフォルト値1, キーワード引数2: デフォルト値2)
+  # メソッドの実装
+end
+
+def buy_burger(menu, drink: true, potato: true)
+  # 省略
+end
+
+# キーワード引数を持つメソッドを呼び出すときはハッシュを作成した時と同じように"シンボル: 値"の形式で引数を指定する
+buy_burger('cheese', drink: true, potato: true)
+buy_burger('fish', drink: true, potato: false)
+
+# キーワード引数にはデフォルト値が設定されているので、引数を省略することもできる
+# drinkはデフォルト値のtrueを使うので設定しない
+buy_burger('fish', potato: false)
+
+# drinkもpotatoもデフォルト値のtrueを使うので指定しない
+buy_burger('cheese')
+
+# キーワード引数は呼び出しの順番を自由に入れ替えることができる
+buy_burger('fish', potato: false, drink: true)
+
+# 存在しないキーワード引数を指定した場合はエラーになる
+buy_burger('fish', salad: true) # => ArgumentError: unknon keyword: salad
+
+# キーワード引数のデフォルト値は省略することもできる。デフォルト値を持たないキーワード引数は呼び出し時に省略することができない
+# デフォルト値なしのキーワード引数を使ってメソッドを定義する
+def buy_burger(menu, drink:, potato:)
+  # 省略
+end
+# キーワード引数を指定すれば、デフォルト値ありの場合と同じように使える
+buy_burger('cheese', drink: true, potato: true)
+# キーワード引数を省略するとエラーになる
+buy_burger('fish', potato: false) # => ArgumentError: missing keywords: drink
+
+# キーワード引数を使うメソッドを呼び出す場合、キーワード引数に一致するハッシュ(キーはシンボル)を引数として渡すこともできる。
+# キーワード引数と一致するハッシュであれば、メソッドの引数として渡すことができる
+params = { drink: true, potato: false }
+buy_burger('fish', params)
