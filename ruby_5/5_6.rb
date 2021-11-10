@@ -45,3 +45,25 @@ buy_burger('cheese', drink: true, potato: true)
 buy_burger('fish', salad: true)
 
 # 特別な要件がない限り、擬似キーワードよりも文法レベルでRuby本体がサポートしてくれるキーワード引数を使った方がメリットが大きい
+
+# 任意のキーワードを受け付ける**引数
+# キーワード引数を使うメソッドが存在しないキーワードを渡すとエラーが発生する
+def buy_burger(menu, drink: true, potato: true)
+  # 省略
+end
+
+# saladとchickenは無効なキーワード引数なのでエラーになる
+buy_burger('fish', drink: true, potato: false, salad: true, chicken: false)
+# => ArgumentError: unknown keywords: salad, chicken
+
+# しかし、任意のキーワードも同時に受け取りたい、というケースは**をつけた引数を最後に用意する。**をつけた引数にはキーワード引数で指定されていないキーワードがハッシュとして格納される
+# 想定外のキーワードはothers引数で受け取る
+def buy_burger(menu, drink: true, potato: true, **others)
+  # othersはハッシュとして渡される
+  puts others
+
+  # 省略
+end
+
+buy_burge('fish', drink: true, potato: false, salad: true, chicken: false)
+# => {:salad=>true, :chicken=>false}
