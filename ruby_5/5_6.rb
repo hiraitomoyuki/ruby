@@ -67,3 +67,34 @@ end
 
 buy_burge('fish', drink: true, potato: false, salad: true, chicken: false)
 # => {:salad=>true, :chicken=>false}
+
+# メソッドの呼び出し時の{}の省略
+# Rubyでは「最後の引数がハッシュであればハッシュリテラルの{}を省略できる」というルールがある。
+# 以下のようにキーワード引数ではなく、引数として純粋にハッシュを受け取りたいメソッドがあるとする
+
+# optionsは任意のハッシュを受け付ける
+def buy_burger(menu, options = {})
+  puts options
+end
+# キーワード引数の場合は呼び出し時に必ず引数名をシンボルで指定する必要がある。ここではキーワード引数との違いを明確にするため、以下のように文字列にしたハッシュを渡すことにする
+# ハッシュを第2引数として渡す
+buy_burger('fish', {'drink' => true, 'potato' => false}) # => {"drink"=>true, "potato"=>false}
+# このコードでも大丈夫。ただ、以下のように書き換えてもOK
+
+# ハッシュリテラルの{}を省略してメソッドを呼び出す
+buy_burger('fish', 'drink' => true, 'potato' => false) # =>{"drink"=>true, "potato"=>false}
+
+# あくまで「最後の引数がハッシュであれば」という条件があるので、最後の引数にハッシュがきていない場合はエラーになる
+# menuとoptionsの順番を入れ替える
+def buy_burger(options = {}, menu)
+  puts options
+end
+
+# optionsは最後の引数ではないので、ハッシュリテラルの{}は省略できない
+buy_burger('drink' => true, 'potato' => false, 'fish')
+# => SyntaxError: syntax error, unexpected '(', expected =>
+#    ue, 'potato' => false, 'fish')
+#                                  ^
+
+# 最後の引数でなければ{}をつけて普通にハッシュを作成する
+buy_burger({'drink' => true, 'potato' => false}, 'fish') # => {"drink"=>true, "potato"=>false}
