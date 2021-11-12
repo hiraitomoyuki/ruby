@@ -127,3 +127,31 @@ buy_burger 'fish', {'drink' => true, 'potato' => false}
 # この場合、そもそもハッシュが最後の引数なので、{}を省略することもできる
 buy_burger 'fish', 'drink' => true, 'potato' => false
 # ハッシュリテラルの前後で構文エラーが発生した場合は、()の省略が原因になっていないかチェックが必要
+
+# ハッシュから配列へ、配列からハッシュへ
+# ハッシュはto_aメソッドを使って配列に変換することができる。to_aメソッドを使うとキーと値が1つの配列に入り、さらにそれが複数並んだ配列になって返る
+currencies = { japan: 'yen', 'us': 'dollar', india: 'rupee' }
+currencies.to_a # => [[:japan, "yen"], [:us, "dollar"], [:india, "rupee"]]
+
+# 反対に、配列に対してto_hメソッドを呼ぶと、配列をハッシュに変換することができる。このとき、ハッシュに変換する配列はキーと値の組み合わせごとに1つの配列に入り、それが要素の分だけ配列として並んでいる必要がある
+array = [[:japan, "yen"], [:us, "dollar"], [:india, "rupee"]]
+array.to_h # => {:japan=>"yen", :us=>"dollar", :india=>"rupee"}
+
+# ハッシュとして解析不能な配列に対してto_hメソッドを呼ぶとエラーになる
+array = [1, 2, 3, 4]
+array.to_h # => TypeError: wrong element type Integer at 0 (expected array)
+
+# キーが重複した場合は最後に登場した配列の要素がハッシュの値に採用される。だが、思いがけない不具合を生む原因になるので、特別な理由がない限りは必ずユニークにしておく
+array = [[:japan, "yen"], [:japan, "円"]]
+array.to_h # => {:japan=>"円"}
+
+# to_hメソッドはRuby2.1から登場した比較的新しいメソッド。以前はキーと値のペアの配列をHash[]に対して渡すことで配列をハッシュに変換していた
+# キーと値のペアの配列をHash[]に渡す
+array = [[:japan, "yen"], [:us, "dollar"], [:india, "rupee"]]
+Hash[array] # => {:japan=>"yen", :us=>"dollar", :india=>"rupee"}
+
+# キーと値が交互に並ぶフラットな配列をsplat展開しても良い
+array = [:japan, "yen", :us, "dollar", :india, "rupee"]
+Hash[*array] # => {:japan=>"yen", :us=>"dollar", :india=>"rupee"}
+
+# Hash[]を使った変換方法は現行のRubyでも有効。昔からメンテナンスされているコードではHash[]が使われているケースもあるはずなので、覚えておくと良い
