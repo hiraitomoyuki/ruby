@@ -98,3 +98,32 @@ buy_burger('drink' => true, 'potato' => false, 'fish')
 
 # 最後の引数でなければ{}をつけて普通にハッシュを作成する
 buy_burger({'drink' => true, 'potato' => false}, 'fish') # => {"drink"=>true, "potato"=>false}
+
+# ハッシュリテラルの{}とブロックの{}
+
+# ()ありのメソッド呼び出し
+puts('Hello')
+# ()なしのメソッド呼び出し
+puts 'Hello'
+
+# ()を省略
+buy_burger {'drink' => true, 'potato' => false}, 'fish'
+# => SyntaxError: syntax error, unexpected =>, expecting '}'
+# buy_burger {'drink' => true, 'potato' => false}, 'fi
+#                       ^
+
+# これは、ハッシュリテラルの{}がブロックの{}だとRubyに解釈されたが、プログラマはブロックの{}ではなく、ハッシュの{}としてコードを書いてしまっているため、Rubyに構文エラーだと怒られた。
+# このようにメソッドの第1引数にハッシュを渡そうとする場合は必ず()をつけてメソッドを呼び出す必要がある
+# 第1引数にハッシュの{}が来る場合は()を省略できない
+buy_burger({'drink' => true, 'potato' => false}, 'fish')
+# 逆に言うと、第2引数以降にハッシュが来る場合は()を省略してもエラーにはならない
+def buy_burger(menu, options = {})
+  puts options
+end
+
+# 第2引数以降にハッシュが来る場合は、()を省略してもエラーにはならない
+buy_burger 'fish', {'drink' => true, 'potato' => false}
+
+# この場合、そもそもハッシュが最後の引数なので、{}を省略することもできる
+buy_burger 'fish', 'drink' => true, 'potato' => false
+# ハッシュリテラルの前後で構文エラーが発生した場合は、()の省略が原因になっていないかチェックが必要
