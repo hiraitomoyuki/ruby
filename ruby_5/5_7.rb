@@ -28,3 +28,35 @@ name = 'Alice'
 
 # %Iでは改行文字や式展開が有効になったうえでシンボルが作られる
 %I(hello\ngood-bye #{name.upcase}) # => [:"hello\ngood-bye, :ALICE"]
+
+# シンボルと文字列の関係
+# 文字列とシンボルは見た目は似ていても、別物なので互換性はない
+# ただし、to_symメソッド(エイリアスメソッドはintern)を使うと、文字列をシンボルに変換することができる
+string = 'apple'
+symbol = :apple
+
+string == symbol        # => false
+string.to_sym == symbol # => true
+
+# 反対に、シンボルを文字列に変換する場合はto_sメソッド(エイリアスメソッドはid2name)を使う
+string = 'apple'
+symbol = :apple
+
+symbol.to_s           # => "apple"
+string == symbol.to_s # => true
+string + symbol.to_s  # => "appleapple"
+
+# メソッドによっては文字列とシンボルを同等に扱うものがある。たとえば、respond_to?メソッドはオブジェクトに対して、文字列またはシンボルで指定した名前のメソッドを呼び出せるかどうか調べることができる
+# respond_to?メソッドの引数には文字列とシンボルの両方を渡せる
+'apple'.respond_to?('include?') # => true
+'apple'.respond_to?(:include?)  # => true
+
+'apple'.respond_to?('foo_bar') # => false
+'apple'.respond_to?(:foo_bar)  # => false
+
+# しかし、文字列とシンボルを同等に扱うかどうかはメソッドの仕様による。一般的には同等に扱わない(文字列とシンボルを区別する)ケースの方が多い
+# 文字列に'pp'が含まれるか調べる
+'apple'.include?('pp') # => true
+
+# シンボルを引数で渡すとエラーになる
+'apple'.include?(:pp)  # => TypeError: no implicit conversions of Symbol into String
