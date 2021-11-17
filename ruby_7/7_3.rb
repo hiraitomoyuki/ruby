@@ -221,3 +221,79 @@ end
 user = User.new('Alice', 20)
 user.name # => "Alice"
 user.age # => 20
+
+# クラスメソッドの定義
+# クラス構文の内部で普通にメソッドを定義すると、そのメソッドはインスタンスメソッドになる。
+# インスタンスメソッドはそのクラスのインスタンスに対して呼び出すことができるメソッドであり、インスタンスに含まれるデータ(つまりインスタンス変数)を読み書きする場合はインスタンスメソッドを定義する。
+class User
+  def initialize(name)
+    @name = name
+  end
+
+  # これはインスタンスメソッド
+  def hello
+    # @nameの値はインスタンスによって異なる
+    "Hello, I am #{@name}."
+  end
+end
+alice = User.new('Alice')
+# インスタンスメソッドはインスタンス(オブジェクト)に対して呼び出す
+alice.hello # => "Hello, I am Alice."
+
+bob = User.new('Bob')
+# インスタンスによって内部のデータが異なるので、helloメソッドの結果も異なる
+bob.hello # => "Hello, I am Bob."
+
+# 一方、そのクラスに関連は深いものの、ひとつひとつのインスタンスに含まれるデータは使わないメソッドを定義したい場合もある。そのような場合はクラスメソッドを定義した方が使い勝手がよくなる。
+# クラスメソッドを定義する方法の1つは、以下のようにメソッド名の前にself.をつける
+# クラスメソッドを定義する方法 その1
+class クラス名
+  def self.クラスメソッド
+    # クラスメソッドの処理
+  end
+end
+
+# もう一つは次のようにclass << selfからendの間にメソッドを書く方法
+# クラスメソッドを定義する方法 その2
+class クラス名
+  class << self
+    def クラスメソッド
+      # クラスメソッドの処理
+    end
+  end
+end
+
+# 後者の方法はネストが1段深くなるが、その代わりにクラスメソッドをたくさん定義したい場合はメソッド名の前に毎回self.をつけなくても済む
+# クラスメソッドを呼び出す場合は、クラス名の直後にドット(.)をつけてメソッドを呼び出す
+クラス名.メソッド名
+
+class User
+  def initialize(name)
+    @name = name
+  end
+
+  # self.をつけるとクラスメソッドになる
+  def self.create_users(names)
+    names.map do |name|
+      User.new(name)
+    end
+  end
+
+  # これはインスタンスメソッド
+  def hello
+    "Hello, I am #{@name}."
+  end
+end
+
+names = ['Alice', 'Bob', 'Carol']
+# クラスメソッドの呼び出し
+users = User.create_users(names)
+users.each do |user|
+  # インスタンスメソッドの呼び出し
+  puts users.hello
+end
+# => Hello, I am Alice.
+#    Hello, I am Bob.
+#    Hello, I am Carol.
+
+# ここではUser.create_usersのようなメソッドをクラスメソッドと読んだが、このようなメソッドは厳密に言うと「クラスオブジェクトの特異メソッド」を定義していることになる
