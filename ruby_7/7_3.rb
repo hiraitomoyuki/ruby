@@ -35,3 +35,16 @@ class User
 end
 User.new # => ArgumentError: wrong number of arguments (given 0, expected 2)
 User.new('Alice', 20) # => name: Alice, 20
+
+# インスタンスメソッドの定義
+# クラス構文の内部でメソッドを定義すると、そのメソッドはインスタンスメソッドになる。インスタンスメソッドはその名の通り、そのクラスのインスタンスに対して呼び出すことができるメソッド
+class User
+  # インスタンスメソッドの定義
+  def hello
+    "Hello!"
+  end
+end
+
+user = User.new
+# インスタンスメソッドの呼び出し
+user.hello # => "Hello!"
