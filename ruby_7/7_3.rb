@@ -297,3 +297,45 @@ end
 #    Hello, I am Carol.
 
 # ここではUser.create_usersのようなメソッドをクラスメソッドと読んだが、このようなメソッドは厳密に言うと「クラスオブジェクトの特異メソッド」を定義していることになる
+
+# 定数
+# クラスの中には定数を定義することもできる。
+class Product
+  # デフォルトの価格を定数として定義する
+  DEFAULT_PRICE = 0
+
+  attr_render :name, :price
+
+  def initialize(name, price = DEFAULT_PRICE)
+    @name = name
+    @price = price
+  end
+end
+
+product = Product.new('A free movie')
+product.price # => 0
+
+# 定数は必ず大文字で始める必要がある。慣習的にアルファベットの大文字と数字、それにアンダースコアで構成されることが多い
+# 定数名の例
+DEFAULT_PRICE = 0
+UNITS = { m: 1.0, ft: 3.28, in: 39.37 }
+
+# 定数はインスタンスメソッド内でもクラスメソッド内でも同じ方法で参照することができる
+class Product
+  DEFAULT_PRICE = 0
+
+  def self.default_price
+    # クラスメソッドから定数を参照する
+    DEFAULT_PRICE
+  end
+
+  def default_price
+    # インスタンスメソッドから定数を参照する
+    DEFAULT_PRICE
+  end
+end
+
+Priduct.default_price # => 0
+
+product = Product.new
+product.default_price # => 0
