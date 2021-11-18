@@ -174,10 +174,10 @@ user.name = 'Bob'
 # @nameを参照する
 user.name # => 'Bob'
 
-# インスタンス変数の内容を読み取り専用にしたい場合はattr_accessorの代わりにattr_renderメソッドを使う
+# インスタンス変数の内容を読み取り専用にしたい場合はattr_accessorの代わりにattr_readerメソッドを使う
 class User
   # 読み取り用のメソッドだけを自動的に定義する
-  attr_render :name
+  attr_reader :name
 
   def initialize(name)
     @name = name
@@ -304,7 +304,7 @@ class Product
   # デフォルトの価格を定数として定義する
   DEFAULT_PRICE = 0
 
-  attr_render :name, :price
+  attr_reader :name, :price
 
   def initialize(name, price = DEFAULT_PRICE)
     @name = name
