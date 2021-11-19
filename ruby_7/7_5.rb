@@ -76,3 +76,72 @@ def rename_to_bob
   # メソッド内でセッターメソッドを呼び出す場合はselfを必ずつける
   self.name = 'Bob'
 end
+
+# クラスメソッドやクラス構文直下のself
+
+# クラス定義内に登場するselfは場所によって「そのクラスのインスタンス自身」を表したり、「クラス自身」を表したりする
+class Foo
+  # 注:このputsはクラス定義の読み込み時に呼び出される
+  puts "クラス構文の直下のself: #{self}"
+
+  def self.bar
+    puts "クラスメソッド内のself: #{self}"
+  end
+
+  def baz
+    puts "インスタンスメソッド内のself: #{self}"
+  end
+end
+# => クラス構文の直下のself: Foo
+
+Foo.bar # => クラスメソッド内のself: Foo
+
+foo = Foo.new
+foo.baz # => インスタンスメソッド内のself: #<Foo:0x007f9d7c0467c8>
+
+# クラス構文の直下とクラスメソッド内でのselfはFooと表示されている。このFooは「Fooクラス自身」を表している。一方、インスタンスメソッド内でのselfは#<Foo:0x007f9d7c0467c8>と表示されている。これは「Fooクラスのインスタンス」を表している
+# よって、次のようなエラーになる
+class Foo
+  def self.bar
+    # クラスメソッドからインスタンスメソッドを呼び出す(エラー)
+    self.bar
+  end
+
+  def baz
+    # インスタンスメソッドからクラスメソッドを呼び出す(エラー)
+    self.bar
+  end
+end
+
+Foo.bar # => NoMethodError: undefined method 'baz' for Foo:Class
+
+foo = Foo.new
+foo.baz # => NoMethodError: undefined method 'bar' for #<Foo:0x007fdffc094070>
+
+# これはselfを省略して呼び出した場合も同じ
+# ちなみに、クラス構文直下ではクラスメソッドを呼び出すことができる。なぜなら、selfがどちらも「クラス自身」になるから。ただし、この場合でもクラスメソッドを定義した後、つまりクラスメソッド定義よりも下側でメソッドを呼び出す必要がある
+class Foo
+  # この時点ではクラスメソッドbarが定義されていないので呼び出せない
+  # (NoMethodErrorが発生する)
+  # self.bar
+
+  def self.bar
+    puts 'hello'
+  end
+
+  # クラス構文の直下でクラスメソッドを呼び出す
+  # (クラスメソッドbarが定義された後なので呼び出せる)
+  self.bar
+end
+# => hello
+
+# Rubyの場合、クラス定義自体も上から順番に実行されるプログラムになっているので、クラス構文の直下でクラスメソッドを呼び出すこともできる。極端だが、クラス構文の直下に繰り返し処理のような普通のコードを書いても実行可能
+class Foo
+  # クラス定義が読み込まれたタイミングで"Hello!"を3回出力する
+  3.times do
+    puts 'Hello!'
+  end
+end
+# => "Hello!"
+#    "Hello!"
+#    "Hello!"
