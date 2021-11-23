@@ -37,3 +37,11 @@ user.is_a(BasicObject) # => true
 
 # is-a関係にない場合はfalse
 user.is_a?(String)     # => false
+
+# 他のクラスを継承したクラスを作る
+# 独自のクラスを定義する際はObjectクラス以外のクラスを継承することもできる
+class サブクラス < スーパークラス
+end
+# DVDクラスはProductクラスを継承する
+class DVD < product
+end
