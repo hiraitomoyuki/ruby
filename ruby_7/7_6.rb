@@ -200,3 +200,20 @@ end
 
 dvd = DVD.new('An awesome film', 3000, 120)
 dvd.to_s # => "name: An awesome film, price: 3000, running_time: 120"
+
+# クラスメソッドの継承
+# クラスを継承すると、クラスメソッドも継承される
+class Foo
+  def self.hello
+    'hello'
+  end
+end
+
+class Bar < Foo
+end
+
+# Fooを継承したBarでもクラスメソッドのhelloが呼び出される
+Foo.hello # => "hello"
+Bar.hello # => "hello"
+
+# ただし、インスタンスメソッドに比べると、継承されたクラスメソッドを活用する機会はあまりない
