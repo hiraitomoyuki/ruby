@@ -56,3 +56,58 @@ class User
 end
 user = User.new
 user.hello # => "Hello, I am Alice."
+
+# privateメソッドはサブクラスでも呼び出せる
+# 他の言語では「privateメソッドはそのクラスの内部でのみ呼び出せる」というしようになっていることが多いが、Rubyでは「privateメソッドはそのクラスだけでなく、サブクラスでも呼び出せる」という仕様になっている
+class Product
+  private
+
+  # これはprivateメソッド
+  def name
+    'A great movie'
+  end
+end
+
+class DVD < Product
+  def to_s
+    # nameはスーパークラスのprivateメソッド
+    "name: #{name}"
+  end
+end
+
+dvd = DVD.new
+# 内部でスーパークラスのprivateメソッドを呼んでいるがエラーにはならない
+dvd.to_s # => "name: A great movie"
+
+class Product
+  def to_s
+    # nameは常に"A great movie"になるとは限らない
+    "name: #{name}"
+  end
+
+  private
+
+  def name
+    'A great movie'
+  end
+end
+
+class DVD < Product
+  private
+
+  # スーパークラスのprivateメソッドをオーバーライドする
+  def name
+    'An awesome film'
+  end
+end
+
+product = Product.new
+# Productクラスのnameメソッドが使われる
+product.to_s # => "name: A great movie"
+
+dvd = DVD.new
+# オーバーライドしたDVDクラスのnameメソッドが使われる
+dvd.to_s     # => "name: An awesome film"
+
+# 今回は意図的にnameメソッドをオーバーライドしたが、場合によっては意図せずに偶然スーパークラスのprivateメソッドをオーバーライドしてしまったということもありえる
+# これはわかりにくい不具合の原因になるので、Rubyで継承を使う場合はスーパークラスの実装もしっかりと把握しないといけない
