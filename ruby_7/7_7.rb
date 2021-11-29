@@ -111,3 +111,39 @@ dvd.to_s     # => "name: An awesome film"
 
 # 今回は意図的にnameメソッドをオーバーライドしたが、場合によっては意図せずに偶然スーパークラスのprivateメソッドをオーバーライドしてしまったということもありえる
 # これはわかりにくい不具合の原因になるので、Rubyで継承を使う場合はスーパークラスの実装もしっかりと把握しないといけない
+
+# クラスメソッドをprivateにしたい場合
+# privateメソッドになるのはインスタンスメソッドのみ。クラスメソッドはprivateキーワードの下に定義してもprivateにはならない
+class User
+  private
+
+  # クラスメソッドもprivateになる？
+  def self.hello
+    'Hello!'
+  end
+end
+# クラスメソッドはprivateにならない
+User.hello # => "Hello!"
+
+# クラスメソッドをpraivateにしたい場合は、class << selfの構文を使う
+class User
+  class << self
+    # class << selfの構文ならクラスメソッドでもprivateが機能する
+    praivate
+
+    def hello
+      'Hello!'
+    end
+  end
+end
+User.hello # => NoMethodError: private method 'hello' called for User:Class
+
+# class << selfを使わない場合は、private_class_methodでクラスメソッドを定義後に公開レベルを変更することができる
+class User
+  def self.hello
+    'Hello!'
+  end
+  # 後からクラスメソッドをprivateに変更する
+  private_class_method :hello
+end
+User.hello # => NoMethodError: private method 'hello' called for User:Class
