@@ -147,3 +147,21 @@ class User
   private_class_method :hello
 end
 User.hello # => NoMethodError: private method 'hello' called for User:Class
+
+# privateメソッドから先に定義する場合
+# praivateキーワードの下に定義したメソッドがprivateメソッドになるように、publicキーワードの下に定義したメソッドはpublicメソッドになる。
+# これを元にすると、privateメソッドやpublicメソッドを好きな順番で定義することができる
+class User
+  # ここから下はprivateメソッド
+  private
+
+  def foo
+  end
+
+  # ここから下はpublicメソッド
+  public
+
+  def bar
+  end
+end
+# 通常はprivateキーワードを使うのは1回だけにして、クラスの最後の方にpraivateメソッドの定義をまとめることが多い
