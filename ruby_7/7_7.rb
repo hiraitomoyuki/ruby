@@ -165,3 +165,29 @@ class User
   end
 end
 # 通常はprivateキーワードを使うのは1回だけにして、クラスの最後の方にpraivateメソッドの定義をまとめることが多い
+
+# 後からメソッドの公開レベルを変更する場合
+# privateキーワードは実際にはメソッドなので、引数を渡すことができる。既存のメソッド名wpprivateキーワード(privateメソッド)に渡すと、そのメソッドがprivateメソッドになる。また、引数を渡した場合はその下に定義したメソッドの公開レベルは変更されない
+class User
+  # いったんpublicメソッドとして定義する
+  def foo
+    'foo'
+  end
+
+  def bar
+    'bar'
+  end
+
+  # fooとbarをprivateメソッドに変更する
+  private :foo, :bar
+
+  # bazはpublicメソッド
+  def baz
+    'baz'
+  end
+end
+
+user = User.new
+user.foo # => NoMethodError: private method 'foo' called for #<User:0x007fea4d08e118>
+user.bar # => NoMethodError: private method 'foo' called for #<User:0x007fea4d08e118>
+user.baz # => "baz"
