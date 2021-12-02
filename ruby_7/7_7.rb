@@ -191,3 +191,68 @@ user = User.new
 user.foo # => NoMethodError: private method 'foo' called for #<User:0x007fea4d08e118>
 user.bar # => NoMethodError: private method 'foo' called for #<User:0x007fea4d08e118>
 user.baz # => "baz"
+
+# protectedメソッド
+# protectedメソッドはそのメソッドを定義したクラス自身と、そのサブクラスのインスタンスメソッドからレシーバ付きで呼び出せる
+# Rubyの場合、「そのクラス自身とサブクラスから呼び出せる」だけではprivateメソッドと違いがないので「レシーバ付きで」が大切
+class User
+  # weightは外部に公開しない
+  attr_reader :name
+
+  def initialize(name, weight)
+    @name = name
+    @weight = weight
+  end
+end
+# 何らかの理由でユーザ同士の体重を比較しなければならなくなった
+class User
+  # 省略
+
+  # 自分がother_userより重い場合はtrue
+  def heavier_than?(other_user)
+    other_user.weight < @weight
+  end
+end
+# このままだとother_userの体重(weight)は取得できないのでエラーになる
+alice = User.new('Alice', 50)
+bob = User.new('Bob', 60)
+# AliceはBobのweightを取得できない
+alice.heavier_than?(bob)
+# => NoMethodError: undefined method 'weight' for #<User:0x007fbb2381c55...
+
+# weightをpublicメソッドとして公開してしまうとother_userの体重を取得できるが、一方で自分の体重も外部から取得可能になってしまう。かといってprivateメソッドにすると、レシーバ付きで呼び出せないので、other_user.weightのような形式で呼び出そうとするとエラーになる
+# 外部には公開したくないが、同じクラスやサブクラスの中であればレシーバ付きで呼び出せるようにしたい、というときに登場するのがprotectedメソッド。weightメソッドをprotectedメソッドにする
+class User
+  # 省略
+
+  def heavier_than?(other_user)
+    other_user.weight < @weight
+  end
+
+  protected
+
+  # protectedメソッドのなので同じクラスかサブクラスであればレシーバ付きで呼び出せる
+  def weight
+    @weight
+  end
+end
+alice = User.new('Alice', 50)
+bob = User.new('Bob', 60)
+
+# 同じクラスのインスタンスメソッド内であればweightが呼びっ出せる
+alice.heavier_than?(bob) # => false
+bob.heavier_than?(alice) # => true
+
+# クラスの外ではweightは呼び出せない
+alice.weight # => NoMethodError: protected method 'weight' called for #<User:0x007fb24001ba8...
+# 体重の一般公開を避けつつ、仲間(同じクラス)の中でのみ、ほかのオブジェクトに公開することができた
+# なお、単純なゲッターメソッドであれば、次のようにしてweightメソッドだけをあとからprotectedメソッドに変更した方がシンプルかも
+class User
+  # いったんpublicメソッドとしてweightを定義する
+  attr_reader :name, :weight
+  # weightのみ、あとからprotectedメソッドに変更する
+  protected :weight
+
+  # 省略
+end
+# とはいえ、publicメソッドとprivateメソッドに比べるとprotectedメソッドが登場する機会はずっと少ない
