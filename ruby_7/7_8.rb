@@ -29,3 +29,37 @@ end
 # => SyntaxError: dynamic constant assignment
 #        DEFAULT_PRICE = 0
 #                       ^
+
+# 定数と再代入
+# Rubyの定数は「みんな、わざわざ変更するなよ」と周りに念を押した変数のようなもの。そのままの状態では定数を色々と変更できてしまう
+# まず、定数には再代入が可能。なので、定数の値を後から書き換えることができる。
+class Product
+  DEFAULT_PRICE = 0
+  # 再代入して定数の値を書き換える
+  DEFAULT_PRICE = 1000
+end
+# => warning: already initialized constant Product::DEFAULT_PRICE
+
+# 再代入後の値が返る
+Product::DEFAULT_PRICE # => 1000
+
+# クラスの外部からでも再代入が可能
+Product::DEFAULT_PRICE = 3000
+# => warning: already initialized constant Product::DEFAULT_PRICE
+
+Product::DEFAULT_PRICE # => 3000
+# 「定数はすでに初期化済みである(already initialized constant)」と警告は表示されるが、再代入自体は成功する
+# クラスの外部からの再代入を防ぎたい場合はクラスをfreeze(凍結)にする。こうするとクラスは変更を受け付けなくなる
+
+# クラスを凍結する
+Product.freeze
+
+# freezeすると変更できなくなる
+Product::DEFAULT_PRICE = 5000 # => RuntimeError: can't modeify frozen #<Class:Product>
+# だが、Rubyの場合、普通は定数を上書きする人はいないだとうということで、わざわざクラスをfreezeさせることは少ない。同様にクラス内でもfreezeを呼べば再代入を防ぐことができるが、そのあとでメソッドの定義もできなくなってしまうので、freezeを呼ぶことはまずない。
+class Product
+  DEFAULT_PRICE = 0
+  # freezeすれば再代入を防止できるが、デメリットの方が大きいので普通はしない
+  freeze
+  DEFAULT_PRICE = 1000 # => RuntimeError: can't modify frozen #<Class:Product>
+end
