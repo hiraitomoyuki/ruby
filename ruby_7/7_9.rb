@@ -89,3 +89,57 @@ DVD.name        # => "DVD"
 # 一方、クラスインスタンス変数ではProductクラスとDVDクラスで別々に管理されている。上記でいうと、Productクラスの@nameには文字列の"Product"が、DVDクラスの@nameには文字列の"DVD"が入っている。
 # インスタンス変数の継承関係に応じてスーパークラスとサブクラスで変数の内容が共有されるが、クラスインスタンス変数はスーパークラスとサブクラスでそれぞれ別々に内容が管理されている。
 # インスタンス変数に比べるとクラスインスタンス変数を使う機会は少ないと思うが、クラス自身もインスタンス変数を保持できることと、インスタンス変数とは異なりスーパークラスとサブクラスでは同じ名前でも別の変数になる
+
+# クラス変数
+# クラスインスタンス変数はインスタンスメソッド内で共有されることがなく、スーパークラスとサブクラスでも共有されることがない
+# 一方で、Eubyにはクラスメソッド内でもインスタンスメソッド内でも共有され、なおかつスーパークラスとサブクラスでも共有される変数も存在する。それがクラス変数。クラス変数は@@some_valueのように、変数名の最初に@を2つ重ねる
+class Product
+  @@name = 'Product'
+
+  def self.name
+    @@name
+  end
+
+  def initialize(name)
+    @@name = name
+  end
+
+  def name
+    @@name
+  end
+end
+
+class DVD < Product
+  @@name = 'DVD'
+
+  def self.name
+    @@name
+  end
+
+  def upcase_name
+    @@name.upcase
+  end
+end
+
+# DVDクラスを定義したタイミングで@@nameが"DVD"に変更される
+Product.name # => "DVD"
+DVD.name     # => "DVD"
+
+product = Product.new('A great movie')
+product.name # => "A great movie"
+
+# Product.newのタイミングで@@nameが"A great movie"に変更される
+Product.name # => "A great movie"
+DVD.name     # => "A great movie"
+
+dvd = DVD.new('An awesome film')
+dvd.name        # => "An awesome film"
+dvd.upcase_name # => "AN AWESOME FILM"
+
+# DVD.newのタイミングで@@nameが"An awesome film"に変更される
+product.name # => "An awesome film"
+Product.name # => "An awesome film"
+DVD.name     # => "An awesome film"
+
+# コードや実行結果がちょっと長いのですぐには理解しにくいが、クラス変数の@@nameはクラスメソッド内でもインスタンスメソッド内でも共有されている。またスーパークラスとサブクラスの間でも共有されている。そのため、@@nameの内容が変更されるとほかのクラスやほかのインスタンスのメソッドも実行結果が変わっている。
+# クラス変数は小さなプログラムでは必要になることは少ないが、ライブラリ(gem)の設定情報(config値)を格納する場合などに使われることがある
