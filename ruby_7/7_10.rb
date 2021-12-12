@@ -29,3 +29,28 @@ end
 user = User.new
 # freezeメソッドを呼び出すとエラーになる
 user.freeze # => NoMethodError: undefined method 'freeze' for #<User:0x007fea4d0c4d08>
+
+# ネストしたクラスの定義
+# クラス定義をする場合、クラスの内部に別のクラスを定義することもできる
+class 外側のクラス
+  class 内側のクラス
+  end
+end
+
+# クラスの内部に定義したクラスは次のように::を使って参照できる
+外側のクラス::内側のクラス
+
+class User
+  class BloodAType
+    attr_reader :type
+
+    def initialize(type)
+      @type = type
+    end
+  end
+end
+
+blood_type = User::BloodType.new('B')
+blood_type.type # => "B"
+
+# こうした手法はクラス名の予期せぬ衝突を防ぐ「名前空間(ネームスペース)」を作る場合によく使われる。ただし、名前空間を作る場合はクラスよりもモジュールが使われることが多い。
