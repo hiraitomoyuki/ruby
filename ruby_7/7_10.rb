@@ -220,3 +220,23 @@ end
 # => 配列です
 
 # このように独自に定義したクラスのオブジェクトをcase文のwhen節の中で使いたい場合は、===を要件に合わせて再定義する
+
+# オープンクラスとモンキーパッチ
+# Rubyはクラスの継承に制限がない。StringクラスやArrayクラスなど、組み込みライブラリのクラスであっても継承して独自のクラスを定義することができる
+# Stringクラスを継承した独自クラスを定義する
+class MyString < String
+  # Stringクラスを拡張するためのコードを書く
+end
+s = MyString.new('Hello')
+s       # => MyString
+s.class # => MyString
+
+# Arrayクラスを継承した独自クラスを定義する
+class MyArray < Array
+  # Arrayクラスを拡張するためのコードを書く
+end
+a = MyArray.new()
+a << 1
+a << 2
+a       # => [1, 2]
+a.class # => MyArray
