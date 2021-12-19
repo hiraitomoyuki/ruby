@@ -240,3 +240,16 @@ a << 1
 a << 2
 a       # => [1, 2]
 a.class # => MyArray
+
+# それだけでなく、定義済みのクラスそのものにメソッドを追加したり、メソッドの定義を上書きしたりすることもできる。Rubyのクラスは変更に対してオープンなので、「オープンクラス」と呼ばれることもある。
+# Stringクラスにshuffleという独自のメソッドを追加する
+class String
+  # 文字列をランダムにシャッフルする
+  def shuffle
+    chars.shuffle.join
+  end
+end
+
+s = 'Hello, I am Alice.'
+s.shuffle # => "e l.iaIlAce im,Ho "
+s.shuffle # => " m,eeA cal Hil.Ilo"
